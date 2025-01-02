@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useContext, useEffect } from "react";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from "expo-router";
 
 
 
@@ -13,6 +14,8 @@ import { data } from "@/data/todos"
 export default function Index() {
   const [todos, setTodos] = useState([])
   const [text, setText] = useState('')
+  const router = useRouter()
+
   const [loaded, error] = useFonts({
     Inter_500Medium, 
   })
@@ -71,12 +74,21 @@ export default function Index() {
     setTodos(todos.filter(todo => todo.id != id))
   }
 
+  const handlePress = (id) => {
+    router.push(`/todos/${id}`)
+  }
+
   const renderItem = ({item}) => (
     <View style={styles.todoItem}>
-      <Text
-        style={[styles.todoText, item.completed && styles.completedText]}
-        onPress={() => toggleTodo(item.id)}
-        >{item.title}</Text>
+      <Pressable
+        onPress={() => handlePress(item.id)}
+        onLongPress={() => toggleTodo(item.id)}
+      >
+        <Text
+          style={[styles.todoText, item.completed && styles.completedText]}
+          >{item.title}
+          </Text>
+        </Pressable>
       <Pressable onPress={() => removeTodos(item.id)}>
       <MaterialCommunityIcons name="delete-circle" size={34} color="#8B0000" />
       </Pressable>
