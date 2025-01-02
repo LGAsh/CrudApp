@@ -21,36 +21,35 @@ export default function Index() {
   })
 
   useEffect(() => {
-    const fetchData = async () =>{
-      try{
+    const fetchData = async () => {
+      try {
         const jsonValue = await AsyncStorage.getItem("TodoApp")
         const storageTodos = jsonValue != null ? JSON.parse(jsonValue) : null
-        if (storageTodos && storageTodos.length){
-          setTodos(storageTodos.sort((a,b) => b.id - a.id))
-        }
-        else{
-          setTodos(data.sort((a,b) => b.id-a.id))
-        }
-      } 
-      catch(e){
-        console.error(e)
 
+        if (storageTodos && storageTodos.length) {
+          setTodos(storageTodos.sort((a, b) => b.id - a.id))
+        } else {
+          setTodos(data.sort((a, b) => b.id - a.id))
+        }
+      } catch (e) {
+        console.error(e)
       }
     }
+
     fetchData()
   }, [data])
-  
-  useEffect(() =>{
-      const storeData = async() =>{
-        try{
-          const jsonValue = JSON.stringify(todos)
-          await AsyncStorage.setItem("TodoApp",jsonValue)
-        }
-        catch(e){
-          console.error(e)
-        }
+
+  useEffect(() => {
+    const storeData = async () => {
+      try {
+        const jsonValue = JSON.stringify(todos)
+        await AsyncStorage.setItem("TodoApp", jsonValue)
+      } catch (e) {
+        console.error(e)
       }
-      storeData()
+    }
+
+    storeData()
   }, [todos])
 
   if(!loaded && !error){
@@ -99,6 +98,7 @@ export default function Index() {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
+          maxLength={30}
           placeholder="Add a new todo"
           placeholderTextColor="black"
           value={text}
